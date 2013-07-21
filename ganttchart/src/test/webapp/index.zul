@@ -1,0 +1,5 @@
+<zk>
+	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('tsoc2013.ganttchart.test.MyViewModel')">
+		<ganttchart width="500px" height="500px" model="@bind(vm.model)"></ganttchart>
+	</div>
+</zk>
