@@ -46,9 +46,15 @@ public class GanttChartStage extends Stage {
 	private Layer _timelineLayer;
 	private Layer _barLayer;
 	
-	private int _unitSize = 20;
+	private static String[] monthArray = {"January", "Febuary", "March", "April", "May", "June", "July", "Augest", "September", "October", "November", "December"};
+	
+	private int _timelineHeight = 35;
+	private int _unitSize = 35;
 	
 	public GanttChartStage(GanttChart chart) {
+		
+		setWidth(1100);
+		setHeight(550);
 		
 		this._chart = chart;
 		
@@ -58,11 +64,11 @@ public class GanttChartStage extends Stage {
 		
 		// create a default color list
 		colorList = new String[8];
-		colorList[0] = "#00a0b0";
-		colorList[1] = "#4f372d";
-		colorList[2] = "#cc2a36";
-		colorList[3] = "#eb6841";
-		colorList[4] = "#edc951";
+		colorList[0] = "#eb6841";
+		colorList[1] = "#edc951";
+		colorList[2] = "#cc2a36";		
+		colorList[3] = "#00a0b0";
+		colorList[4] = "#4f372d";		
 		colorList[5] = "#67204e";
 		colorList[6] = "#599653";
 		colorList[7] = "#9bcd9b";
@@ -104,7 +110,7 @@ public class GanttChartStage extends Stage {
 		}
 		
 		// update UI
-		drawTimeline();
+		drawTimelineSimple();
 		redrawTaskBars();
 	}
 	
@@ -143,14 +149,29 @@ public class GanttChartStage extends Stage {
 			_taskMap.put(task, bar); // mapping
 			_taskBarList.add(bar); // maintain bar list
 			_barLayer.appendChild(bar); // append to layer
+			
+			// text on bar
+			Text text = new Text();
+			bar.setText(text);
+			_barLayer.appendChild(text);
 		}
+		Text text = bar.getText(); 
 		
 		// apply the style to task bar
-		bar.setX(0); // dynamic change with view start date
+		Calendar cal = getCalendar();
+		long x = dateDiff(task.getStart(), cal.getTime());
+		
+		bar.setX(x * _unitSize); // dynamic change with view start date
 		bar.setHeight(_unitSize);
 		bar.setVisible(style.isVisible());
 		bar.setFill(style.getColor());
 		bar.setStroke("black");
+		
+		// apply text style
+		text.setX((x + 1) * _unitSize);
+		text.setFontSize("18");
+		text.setTextContent(task.getDescription());
+		text.setFill("black");		
 		
 		// calculate width for task bar
 		long width = dateDiff(task.getEnd(), task.getStart()) + 1;
@@ -163,6 +184,18 @@ public class GanttChartStage extends Stage {
 	}
 	
 	/**
+	 * create a clean calendar
+	 * @return
+	 */
+	private Calendar getCalendar() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(_chart.getStartDate());
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+		return cal;
+	}
+	
+	/**
 	 * show the task bar on UI
 	 * sort the task bar then append it to the chart with y-sequential order
 	 * @param chart
@@ -171,34 +204,92 @@ public class GanttChartStage extends Stage {
 		Collections.sort(_taskBarList, new DateComparator());
 		int barCounter = 0;
 		for(TaskBar bar : _taskBarList) {
-			bar.setY(barCounter++ * _unitSize);
-			if(bar.getParent() != this._barLayer) // don't append again
+			bar.setY(barCounter++ * _unitSize + _timelineHeight);
+			bar.getText().setY(bar.getY());
+			if(bar.getParent() != this._barLayer) {// don't append again
 				this._barLayer.appendChild(bar);
+				this._barLayer.appendChild(bar.getText());
+			}
 		}
 	}
 	
-	public void drawTimeline() {
-		
-		// draw 14 days
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(_chart.getStartDate());
-		
+	public void drawTimelineSimple() {
+		// draw current month only
+		Calendar cal = getCalendar();
+		int month = cal.get(Calendar.MONTH); // remember the current month
+
 		Text monthYear = new Text();
-		monthYear.setTextContent(cal.get(Calendar.YEAR) + " " + cal.get(Calendar.MONTH));
-		monthYear.setX(0); monthYear.setY(0);
-		monthYear.setFontSize("12");
+		monthYear.setTextContent(cal.get(Calendar.YEAR) + " " + monthArray[cal.get(Calendar.MONTH)-1]);
+		monthYear.setX(0);
+		monthYear.setFontSize("40");
 		monthYear.setFill("black");
 		_timelineLayer.appendChild(monthYear);
 		
-		for(int i = 0; i < 14; i++) {
+		for(int i = 0; i < 31; i++) {
+			if(cal.get(Calendar.MONTH) != month) {
+				break;
+			}
+			// draw day text
 			Text day = new Text();
 			day.setX(i * _unitSize);
-			day.setY(10);
+			day.setY(35);
 			day.setTextContent(String.valueOf(cal.get(Calendar.DATE)));
-			day.setFontSize("12");
+			day.setFontSize("24");
 			day.setFill("black");
 			_timelineLayer.appendChild(day);
 			
+			// add day
+			cal.add(Calendar.DATE, 1);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void drawTimeline() {
+		
+		// draw 7 * 6 days (6 weeks) 
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(_chart.getStartDate());
+		
+		int month = cal.get(Calendar.MONTH); // remember the current month
+		
+		// boundary issue
+		// don't draw month text on the month boundary (5 days)
+		cal.add(Calendar.DATE, 5);
+		if(cal.get(Calendar.MONTH) == month) {
+			Text monthYear = new Text();
+			monthYear.setTextContent(cal.get(Calendar.YEAR) + " " + cal.get(Calendar.MONTH));
+			monthYear.setX(0);
+			monthYear.setFontSize("40");
+			monthYear.setFill("black");
+			_timelineLayer.appendChild(monthYear);
+		}
+		cal.add(Calendar.DATE, -5);
+		
+		for(int i = 0; i < 7 * 6; i++) {
+			
+			// draw next month year text
+			if(cal.get(Calendar.MONTH) != month) {
+				Text anotherMonthYear = new Text();
+				anotherMonthYear.setTextContent(cal.get(Calendar.YEAR) + " " + cal.get(Calendar.MONTH));
+				anotherMonthYear.setX(i * _unitSize);
+				anotherMonthYear.setFontSize("40");
+				anotherMonthYear.setFill("black");		
+				_timelineLayer.appendChild(anotherMonthYear);
+				month = cal.get(Calendar.MONTH);
+			}
+			
+			// draw day text
+			Text day = new Text();
+			day.setX(i * _unitSize);
+			day.setY(35);
+			day.setTextContent(String.valueOf(cal.get(Calendar.DATE)));
+			day.setFontSize("24");
+			day.setFill("black");
+			_timelineLayer.appendChild(day);
+			
+			// add day
 			cal.add(Calendar.DATE, 1);
 		}
 		

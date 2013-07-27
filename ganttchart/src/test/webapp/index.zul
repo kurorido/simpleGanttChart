@@ -1,5 +1,47 @@
 <zk>
-	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('tsoc2013.ganttchart.test.MyViewModel')">
-		<ganttchart width="500px" height="500px" model="@bind(vm.model)"></ganttchart>
+	<style>
+		.buttonImage { background-color: #F3F897; width: 128px; height:
+		128px; margin-top: 11px; margin-bottom: 11px }
+
+		.buttonImage:hover { background-color: #FCB372; }
+		
+		body {
+			overflow: hidden;
+			height: 100%;
+		}
+	</style>
+	<div
+		style="top:0; 
+		height:40px; 
+		background-color:#033E54; 
+		text-align: center;">
+		<div style="padding: 5px">
+			<label style="font-size: 24px;color: white;">
+				Gantt Chart Demo
+			</label>
+		</div>
+	</div>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('tsoc2013.ganttchart.test.MyViewModel')"
+		style="overflow: hidden;  background-color: #F3F897;">
+		<div style="float:left; width: 150px; height:580px; overflow: auto">
+			<div class="buttonImage">
+				<image src="img/left_arrow_128x128.png" />
+			</div>
+			<div class="buttonImage">
+				<image src="img/right_arrow_128x128.png" />
+			</div>
+			<div class="buttonImage">
+				<image src="img/list_128x128.png" />
+			</div>
+			<div class="buttonImage">
+				<image src="img/add_128x128.png" />
+			</div>
+		</div>
+		<div style="position: absolute; left: 170px;">
+			<ganttchart width="905px" height="600px"
+				model="@bind(vm.model)">
+			</ganttchart>
+		</div>
 	</div>
 </zk>

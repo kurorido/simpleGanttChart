@@ -16,19 +16,71 @@ public class MyViewModel {
 	@AfterCompose
 	public void init() {
 		
+		
 		model = new SimpleGanttModel();
 		
-		// Project 1
-		model.addValue("Project 1", new GanttTask("Requirement Analysis", date(2008,4,1), date(2008,4,5), 0.0));
-		model.addValue("Project 1", new GanttTask("Design Analysis", date(2008,4,5), date(2008,4,10), 0.0));
-		model.addValue("Project 1", new GanttTask("Implement", date(2008,4,15), date(2008,4,20), 0.0));
-		model.addValue("Project 1", new GanttTask("Test", date(2008,4,25), date(2008,4,30), 0.0));
+		int step1 = 5;
+		int step2 = 7;
 		
+		// Project 1
+		Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        
+		Calendar cal2 = Calendar.getInstance();
+        cal2.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
+        cal2.set(Calendar.MILLISECOND, 0);
+        cal2.add(Calendar.DATE, 5);
+		
+		model.addValue("Project 1", new GanttTask("Requirement Analysis", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step1);
+        cal2.add(Calendar.DATE, step1);
+		
+		model.addValue("Project 1", new GanttTask("Design Analysis", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step1);
+        cal2.add(Calendar.DATE, step1);
+        
+		model.addValue("Project 1", new GanttTask("Implement", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step1);
+        cal2.add(Calendar.DATE, step1);
+        
+		model.addValue("Project 1", new GanttTask("Test", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step1);
+        cal2.add(Calendar.DATE, step1);
+        
 		// Project 2
-		model.addValue("Project 2", new GanttTask("Task 2-1", date(2008,4,1), date(2008,4,5), 0.0));
-		model.addValue("Project 2", new GanttTask("Task 2-2", date(2008,4,5), date(2008,4,10), 0.0));		
-		model.addValue("Project 2", new GanttTask("Task 2-3", date(2008,4,10), date(2008,4,15), 0.0));		
-		model.addValue("Project 2", new GanttTask("Task 2-4", date(2008,4,15), date(2008,4,20), 0.0));	
+        cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        
+        cal2 = Calendar.getInstance();
+        cal2.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
+        cal2.set(Calendar.MILLISECOND, 0);
+        cal2.add(Calendar.DATE, 5);
+        
+		model.addValue("Project 2", new GanttTask("Task 2-1", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step2);
+        cal2.add(Calendar.DATE, step2);
+        
+		model.addValue("Project 2", new GanttTask("Task 2-2", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step2);
+        cal2.add(Calendar.DATE, step2);
+        
+		model.addValue("Project 2", new GanttTask("Task 2-3", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step2);
+        cal2.add(Calendar.DATE, step2);
+        
+		model.addValue("Project 2", new GanttTask("Task 2-4", cal.getTime(), cal2.getTime(), 0.0));
+		
+        cal.add(Calendar.DATE, step2);
+        cal2.add(Calendar.DATE, step2);
 	}
 	
     private Date date(int year, int month, int day) {

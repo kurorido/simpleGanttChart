@@ -67,8 +67,6 @@ public class GanttChart extends Div {
 		this.getChildren().clear();
 		
 		_stage = new GanttChartStage(this);	 // create a new stage
-		_stage.setWidth(400);
-		_stage.setHeight(400);
 		this.appendChild(_stage);
 		
 		_stage.build(_model); // build & redraw stage
