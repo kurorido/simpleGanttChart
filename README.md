@@ -1,4 +1,4 @@
-Simple Gantt Chart Component in ZK Framework
+Simple Gantt Chart Component in ZK
 ================
 
 Current Version : 0.0.1-SNAPSHOT
