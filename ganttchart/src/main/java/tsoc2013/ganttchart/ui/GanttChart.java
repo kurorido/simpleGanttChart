@@ -42,6 +42,20 @@ public class GanttChart extends Div {
 		_startDate = Calendar.getInstance().getTime();
 	}
 	
+	public void nextMonth() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(_startDate);
+		cal.add(Calendar.MONTH, 1);
+		this.setStartDate(cal.getTime());
+	}
+	
+	public void previousMonth() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(_startDate);
+		cal.add(Calendar.MONTH, -1);
+		this.setStartDate(cal.getTime());		
+	}
+	
 	private void initDataListener() {
 		if (_dataListener == null) {
 			_dataListener = new GanttChartDataListener();
@@ -111,7 +125,10 @@ public class GanttChart extends Div {
 	}
 
 	public void setStartDate(Date startDate) {
-		this._startDate = startDate;
+		if(startDate != _startDate) {
+			this._startDate = startDate;
+			invalidate();
+		}
 	}
 
 }

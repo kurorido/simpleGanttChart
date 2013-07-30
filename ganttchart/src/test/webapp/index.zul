@@ -25,10 +25,10 @@
 		viewModel="@id('vm') @init('tsoc2013.ganttchart.test.MyViewModel')"
 		style="overflow: hidden;  background-color: #F3F897;">
 		<div style="float:left; width: 150px; height:580px; overflow: auto">
-			<div class="buttonImage">
+			<div class="buttonImage" onClick="@command('previousMonth', chart=ganttChart)">
 				<image src="img/left_arrow_128x128.png" />
 			</div>
-			<div class="buttonImage">
+			<div class="buttonImage" onClick="@command('nextMonth', chart=ganttChart)">
 				<image src="img/right_arrow_128x128.png" />
 			</div>
 			<div class="buttonImage">
@@ -39,7 +39,7 @@
 			</div>
 		</div>
 		<div style="position: absolute; left: 170px;">
-			<ganttchart width="905px" height="600px"
+			<ganttchart id="ganttChart" width="905px" height="600px"
 				model="@bind(vm.model)">
 			</ganttchart>
 		</div>
