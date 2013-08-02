@@ -31,7 +31,7 @@
 			<div class="buttonImage" onClick="@command('nextMonth', chart=ganttChart)">
 				<image src="img/right_arrow_128x128.png" />
 			</div>
-			<div class="buttonImage">
+			<div class="buttonImage" onClick="@command('showSeriesList')">
 				<image src="img/list_128x128.png" />
 			</div>
 			<div class="buttonImage">
@@ -43,5 +43,37 @@
 				model="@bind(vm.model)">
 			</ganttchart>
 		</div>
+		<!-- list view -->
+		<window title="All Series" mode="modal" border="normal" width="300px" visible="@load(vm.listSeries)">
+			<listbox model="@load(vm.model.allSeries)" onSelect="@command('showTaskList', listbox=self)">
+				<listitem self="@{each=series}">
+        			<listcell label="@{series}"/>
+    			</listitem>
+			</listbox>
+	    </window>
+		<window title="Tasks in series" mode="modal" border="normal" width="840px" visible="@load(vm.listTasks)">
+			<label>Select the task and perform operation</label>
+			<listbox model="@load(vm.taskList)" height="300px">
+			    <listhead>
+			        <listheader label="Description"/>
+			        <listheader label="Start"/>
+			        <listheader label="End"/>
+			        <listheader label="Percent"/>			        
+			    </listhead>	
+				<template name="model">
+					<listitem>
+	        			<listcell label="${each.description}"/>
+	        			<listcell label="${each.start}"/>
+	        			<listcell label="${each.end}"/>
+	        			<listcell label="${each.percent}"/>
+	    			</listitem>
+    			</template>
+			</listbox>
+			<button label="Add Task Above"></button>
+			<button label="Add Child Task"></button>
+			<button label="Edit Task"></button>
+			<button label="Remove Task"></button>
+			<button label="OK" onClick="@command('closeTaskList')"></button>
+	    </window>
 	</div>
 </zk>

@@ -26,11 +26,13 @@
 			<name>ZK CE Repository</name>
 			<url>http://mavensync.zkoss.org/maven2</url>
 		</repository>
+		<!--
 		<repository>
 			<id>ZK EVAL</id>
       		<name>ZK Evaluation Repository</name>
 			<url>http://mavensync.zkoss.org/eval</url>
 		</repository>
+		-->
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -80,7 +82,7 @@
 		<dependency>
 			<groupId>org.zkoss.graphics</groupId>
 			<artifactId>graphics</artifactId>
-			<version>0.8.0.FL</version>
+			<version>0.8.0</version>
 		</dependency>		
 		
 		<!-- ZK 5 breeze theme

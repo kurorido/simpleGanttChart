@@ -39,7 +39,10 @@ public class GanttChart extends Div {
 	private Date _startDate;
 	
 	public GanttChart() {
-		_startDate = Calendar.getInstance().getTime();
+		Calendar cal = Calendar.getInstance();
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        _startDate = cal.getTime();
 	}
 	
 	public void nextMonth() {
@@ -129,6 +132,10 @@ public class GanttChart extends Div {
 			this._startDate = startDate;
 			invalidate();
 		}
+	}
+	
+	public SeriesStyle getSeriesStyle(Comparable<?> series) {
+		return _stage.getSeriesStyle(series);
 	}
 
 }

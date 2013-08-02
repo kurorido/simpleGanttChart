@@ -46,7 +46,7 @@ public class GanttChartStage extends Stage {
 	private Layer _timelineLayer;
 	private Layer _barLayer;
 	
-	private static String[] monthArray = {"January", "Febuary", "March", "April", "May", "June", "July", "Augest", "September", "October", "November", "December"};
+	private static String[] monthArray = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	
 	private int _timelineHeight = 35;
 	private int _unitSize = 35;
@@ -161,9 +161,23 @@ public class GanttChartStage extends Stage {
 		Calendar cal = getCalendar();
 		long x = dateDiff(task.getStart(), cal.getTime());
 		
+		Date start = cal.getTime();
+		cal.add(Calendar.MONTH, 1);
+		cal.add(Calendar.DATE, -1);
+		Date end = cal.getTime();
+		
 		bar.setX(x * _unitSize); // dynamic change with view start date
 		bar.setHeight(_unitSize);
-		bar.setVisible(style.isVisible());
+		
+		// visibility is depending on view start date & end date
+		if(style.isVisible()) {
+			if(isBetween(task.getStart(), start, end) || isBetween(task.getEnd(), start, end)) {
+				bar.setVisible(true);
+			} else {
+				bar.setVisible(false);
+			}
+		}
+		
 		bar.setFill(style.getColor());
 		bar.setStroke("black");
 		
@@ -181,6 +195,10 @@ public class GanttChartStage extends Stage {
 		if(task.getSubtasks() != null && task.getSubtasks().length > 0) {
 			createTaskBar(series, task, style);
 		}
+	}
+	
+	private boolean isBetween(Date date, Date start, Date end) {
+		return date.after(start) && date.before(end);
 	}
 	
 	/**
@@ -204,11 +222,13 @@ public class GanttChartStage extends Stage {
 		Collections.sort(_taskBarList, new DateComparator());
 		int barCounter = 0;
 		for(TaskBar bar : _taskBarList) {
-			bar.setY(barCounter++ * _unitSize + _timelineHeight);
-			bar.getText().setY(bar.getY());
-			if(bar.getParent() != this._barLayer) {// don't append again
-				this._barLayer.appendChild(bar);
-				this._barLayer.appendChild(bar.getText());
+			if(bar.isVisible()) { // only draw visible bar
+				bar.setY(barCounter++ * _unitSize + _timelineHeight);
+				bar.getText().setY(bar.getY());
+				if(bar.getParent() != this._barLayer) {// don't append again
+					this._barLayer.appendChild(bar);
+					this._barLayer.appendChild(bar.getText());
+				}
 			}
 		}
 	}
@@ -219,7 +239,7 @@ public class GanttChartStage extends Stage {
 		int month = cal.get(Calendar.MONTH); // remember the current month
 
 		Text monthYear = new Text();
-		monthYear.setTextContent(cal.get(Calendar.YEAR) + " " + monthArray[cal.get(Calendar.MONTH)-1]);
+		monthYear.setTextContent(cal.get(Calendar.YEAR) + " " + monthArray[cal.get(Calendar.MONTH)]);
 		monthYear.setX(0);
 		monthYear.setFontSize("40");
 		monthYear.setFill("black");
@@ -293,6 +313,10 @@ public class GanttChartStage extends Stage {
 			cal.add(Calendar.DATE, 1);
 		}
 		
+	}
+	
+	public SeriesStyle getSeriesStyle(Comparable<?> series) {
+		return _styleMap.get(series);
 	}
 	
 	/**
