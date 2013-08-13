@@ -1,7 +1,9 @@
 package tsoc2013.ganttchart.test;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
@@ -26,7 +28,7 @@ public class MyViewModel {
 	private boolean listSeries;
 	private boolean listTasks;
 	private Comparable<?> selectedSeries;
-	private GanttTask[] taskList;
+	private List<GanttTask> taskList;
 	
 	@AfterCompose
 	public void init() {
@@ -149,16 +151,17 @@ public class MyViewModel {
 		Listitem item = listbox.getSelectedItem();
 		Listcell cell = ((Listcell) item.getFirstChild());
 		setSelectedSeries(cell.getLabel());
-		taskList = model.getTasks(selectedSeries);
+		taskList = Arrays.asList(model.getTasks(selectedSeries));
 		setListSeries(false);
 		setListTasks(true);
 		listbox.selectItem(null);
 	}
 	
-	@NotifyChange({"listTasks"})
+	@NotifyChange({"listTasks", "model"})
 	@Command("closeTaskList")
-	public void closeTaskList() {
+	public void closeTaskList(@BindingParam("chart") GanttChart chart) {
 		setListTasks(false);
+		chart.invalidate(); // refresh ui
 	}
 
 	public GanttModel getModel() {
@@ -193,12 +196,21 @@ public class MyViewModel {
 		this.selectedSeries = selectedSeries;
 	}
 
-	public GanttTask[] getTaskList() {
+	public List<GanttTask> getTaskList() {
 		return taskList;
 	}
 
-	public void setTaskList(GanttTask[] taskList) {
+	public void setTaskList(List<GanttTask> taskList) {
 		this.taskList = taskList;
+	}
+	
+	@NotifyChange({"taskList"})
+	@Command("delete")
+	public void deleteTask(@BindingParam("listbox") Listbox listbox) {
+		GanttTask task = listbox.getSelectedItem().getValue();
+		model.removeValue(selectedSeries, task);
+		taskList = Arrays.asList(model.getTasks(selectedSeries));
+		System.out.println("remove " + task.getDescription());
 	}
 
 }

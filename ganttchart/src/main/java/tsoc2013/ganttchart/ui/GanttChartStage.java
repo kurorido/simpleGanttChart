@@ -155,7 +155,7 @@ public class GanttChartStage extends Stage {
 			bar.setText(text);
 			_barLayer.appendChild(text);
 		}
-		Text text = bar.getText(); 
+		Text text = bar.getText();
 		
 		// apply the style to task bar
 		Calendar cal = getCalendar();

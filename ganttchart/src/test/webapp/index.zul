@@ -40,7 +40,7 @@
 		</div>
 		<div style="position: absolute; left: 170px;">
 			<ganttchart id="ganttChart" width="905px" height="600px"
-				model="@bind(vm.model)">
+				model="@load(vm.model)">
 			</ganttchart>
 		</div>
 		<!-- list view -->
@@ -53,7 +53,7 @@
 	    </window>
 		<window title="Tasks in series" mode="modal" border="normal" width="840px" visible="@load(vm.listTasks)">
 			<label>Select the task and perform operation</label>
-			<listbox model="@load(vm.taskList)" height="300px">
+			<listbox id="listbox" model="@load(vm.taskList)" height="300px">
 			    <listhead>
 			        <listheader label="Description"/>
 			        <listheader label="Start"/>
@@ -72,8 +72,8 @@
 			<button label="Add Task Above"></button>
 			<button label="Add Child Task"></button>
 			<button label="Edit Task"></button>
-			<button label="Remove Task"></button>
-			<button label="OK" onClick="@command('closeTaskList')"></button>
+			<button label="Remove Task" onClick="@command('delete', listbox=listbox)"></button>
+			<button label="OK" onClick="@command('closeTaskList', chart=ganttChart)"></button>
 	    </window>
 	</div>
 </zk>
